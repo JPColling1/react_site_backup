@@ -1,7 +1,7 @@
 
 export default class CompanyRequests{
 
-    testTheAPI = function(){
+    testTheAPI() {
         var SwaggerJsClient = require('swagger-js-client');
 
         var api = new SwaggerJsClient.DefaultApi()
