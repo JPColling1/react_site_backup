@@ -1,6 +1,5 @@
 import React from 'react'
-//import CompanyRequests from '../../company_db_api/company_requests';
-  
+//import testAPI from '../../company_requests'
 
 
 function testFunction(){
