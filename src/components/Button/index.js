@@ -1,5 +1,5 @@
 import React from 'react'
-//import testAPI from '../../company_requests'
+import testAPI from '../../company_requests'
 
 
 function testFunction(){

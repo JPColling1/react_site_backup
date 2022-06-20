@@ -1,5 +1,5 @@
 //import API
-import * as SwaggerJsClient from '../@jpcolling/swagger-js-client';
+import * as SwaggerJsClient from '@jpcolling/swagger-js-client';
 
 //test if API can be called
 function testAPI(){
