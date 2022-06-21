@@ -39,7 +39,6 @@ export default class Button extends React.Component{
 
     render(){
         return  <button onClick={this.testFunction.bind(this)}
-                         type="button">{this.props.name}
-                         dataCallback={this.handleCallback}</button> 
+                         type="button">{this.props.name}</button> 
     }
 }
