@@ -1,10 +1,10 @@
 import React from 'react'
-import testAPI from '../../company_requests'
+import Company_Requests from '../../company_requests'
 
 
 function testFunction(){
-    //let requests = new CompanyRequests();
-    //requests.testTheAPI();
+    let requests = new Company_Requests();
+    requests.get_Companies();
 }
 
 export default class Button extends React.Component{
