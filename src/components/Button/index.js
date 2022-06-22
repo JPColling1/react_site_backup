@@ -1,6 +1,5 @@
 import React from 'react'
 import Company_Requests from '../../company_requests'
-//import Input from '../Input/index'
 
 export default class Button extends React.Component{
     constructor(props){
@@ -9,9 +8,21 @@ export default class Button extends React.Component{
                     company_name: 0}
     }
 
-    // handleCallback(){
+    get_idNum(){
+        return this.state.idNum;
+    }
 
-    // }
+    set_idNum(idNumber){
+        this.setState({idNum: idNumber});
+    }
+
+    get_company_name(){
+        return this.state.company_name;
+    }
+
+    set_company_name(name){
+        this.setState({company_name: name});
+    }
 
     testFunction(){
         let requests = new Company_Requests();
