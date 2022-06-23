@@ -23,6 +23,7 @@ export default class Company_Requests{
         } else {
             console.log('API called successfully. Returned data: ');
             console.log(response["body"]);
+            return(String(response["body"]));
         }
         });
     }
