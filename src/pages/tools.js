@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '../components/Button/index';
+//import Table from '../components/Table/index'
 //import Input from '../components/Input/index';
 //import {useState} from 'react';
 
@@ -40,6 +41,7 @@ export default class Tools extends React.Component {
         <Button name="Patch Company" request="patch" ref={this.button3}></Button>
         <Button name="Put Company" request="put" ref={this.button4}></Button>
         <Button name="Delete Company" request="delete" ref={this.button5}></Button>
+        {/* <Table></Table> */}
       </div>
   }
 }
