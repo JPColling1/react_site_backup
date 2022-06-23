@@ -13,7 +13,7 @@ export default class Tools extends React.Component {
     this.button3 = React.createRef();
     this.button4 = React.createRef();
     this.button5 = React.createRef();
-    // this.state = {idvalue:"",
+    // this.state = {idvalue:"",<Table></Table>
     //             namevalue:""}
   }
 
