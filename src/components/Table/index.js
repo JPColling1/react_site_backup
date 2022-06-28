@@ -2,26 +2,49 @@ import React from 'react';
 import { Markup } from 'interweave';
 import Company_Requests from '../../company_requests';
 
+var responseData;
+
+function set_global_data(newData){
+    responseData = newData;
+    console.log(responseData);
+}
+
 export default class Table extends React.Component{
-    render(){
-        var table = "<table><tr><th>company_id</th><th>company_name</th></tr>";
+    constructor(props){
+        super(props);
+        this.state={tableData: ""}
+    }
+    
+    set_data(input){
+        set_global_data(input);
+        console.log(responseData);
+        this.setState({tableData: responseData});
+    }
 
+
+    retrieve_data(){
         let requests = new Company_Requests();
-        var tableData = requests.get_Companies();
+        requests.get_Companies().then(value => this.set_data(value));
+    }
 
-        console.log("Get data here: " + requests.get_Companies())
-        console.log("Returned Data is: " + tableData);
+    componentDidMount(){
+        this.retrieve_data();
+    }
 
-        
-        for (let i = 0; i < tableData.length; i++) {
-            table += "</tr>";
-            table += "<td>[" + tableData[i]["company_id"] + "]</td>";
-            table += "<td>[" + tableData[i]["company_name"] + "]</td>";
-            table += "</tr>"
+    render(){
+        console.log("generating table");
+        var table = "<table><tr><th>company_id</th><th>company_name</th></tr>";
+        if (responseData){
+            for (let i = 0; i < responseData.length; i++) {
+                    table += "</tr>";
+                    table += "<td>[" + responseData[i]["company_id"] + "]</td>";
+                    table += "<td>[" + responseData[i]["company_name"] + "]</td>";
+                    table += "</tr>"
+                    //console.log(responseData[i]["company_id"]);
+                }
         }
-
         table += "</table";
-        table = <Markup content={table}/>
-        return table
+        table = <Markup content={table}/>;
+        return table;
     }
 }
