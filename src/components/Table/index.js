@@ -6,7 +6,7 @@ var responseData;
 
 function set_global_data(newData){
     responseData = newData;
-    console.log(responseData);
+    //console.log(responseData);
 }
 
 export default class Table extends React.Component{
@@ -17,7 +17,7 @@ export default class Table extends React.Component{
     
     set_data(input){
         set_global_data(input);
-        console.log(responseData);
+        //console.log(responseData);
         this.setState({tableData: responseData});
     }
 
