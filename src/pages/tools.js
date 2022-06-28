@@ -1,10 +1,11 @@
 //import { wait } from '@testing-library/user-event/dist/utils';
 import React from 'react';
 //import Button from '../components/Button/index';
-import Table from '../components/Table/index'
+import Table from '../components/Table/index';
 //import Input from '../components/Input/index';
 //import {useState} from 'react';
-import Company_Requests from '../company_requests'
+import Company_Requests from '../company_requests';
+import './tools.css';
 
 //var dataTable = new Table();
 
@@ -58,16 +59,23 @@ export default class Tools extends React.Component {
   render(){
     return <div>
         <h1>Tools</h1>
-        <input onChange={this.handleidChange.bind(this)}></input>
-        <input onChange={this.handlenameChange.bind(this)}></input>
-        <button onClick={this.makeRequests.bind(this, "gets")}type="button">Retrieve Companies</button> 
-        <button onClick={this.makeRequests.bind(this, "get")}type="button">Retrieve Company</button> 
-        <button onClick={this.makeRequests.bind(this, "post")}type="button">Post Company</button> 
-        <button onClick={this.makeRequests.bind(this, "patch")}type="button">Patch Company</button> 
-        <button onClick={this.makeRequests.bind(this, "put")}type="button">Put Company</button>
-        <button onClick={this.makeRequests.bind(this, "delete")}type="button">Delete Company</button> 
-
-        <Table ref={this.dataTable}></Table>
+        <div class="row">
+          <div class="column">
+            <input onChange={this.handleidChange.bind(this)} placeholder="company_id"></input>
+            <input onChange={this.handlenameChange.bind(this)} placeholder="company_name"></input>
+          </div>
+          <div class="column">
+            <button onClick={this.makeRequests.bind(this, "gets")}type="button">Retrieve Companies in Console</button> 
+            <button onClick={this.makeRequests.bind(this, "get")}type="button">Retrieve Company in Console</button> 
+            <button onClick={this.makeRequests.bind(this, "post")}type="button">Post Company</button> 
+            <button onClick={this.makeRequests.bind(this, "patch")}type="button">Patch Company</button> 
+            <button onClick={this.makeRequests.bind(this, "put")}type="button">Put Company</button>
+            <button onClick={this.makeRequests.bind(this, "delete")}type="button">Delete Company</button> 
+          </div>
+          <div class="column">
+            <Table ref={this.dataTable}></Table>
+          </div>
+        </div>
       </div>
   }
 }

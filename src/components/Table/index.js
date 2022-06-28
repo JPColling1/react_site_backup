@@ -21,7 +21,6 @@ export default class Table extends React.Component{
         this.setState({tableData: responseData});
     }
 
-
     retrieve_data(){
         let requests = new Company_Requests();
         requests.get_Companies().then(value => this.set_data(value));

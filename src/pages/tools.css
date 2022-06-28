@@ -1,0 +1,30 @@
+Tools{
+    column-count: 2;
+}
+.column {
+    float: left;
+    width: 20%;
+}
+
+input{
+    display: block;
+    margin: 5px 5px 5px 5px;
+    padding: 3px;
+}
+
+button{
+    display: block;
+    text-align: center;
+    color:darkcyan;
+    background-color: #EEEEEE;
+    margin: 5px 5px 5px 5px;
+    padding: 3px;
+    /* position: relative;
+    left:30px; */
+}
+
+Table{
+    display: block;
+    border-style: solid;
+    border-color: black;
+}
