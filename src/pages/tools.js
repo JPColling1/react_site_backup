@@ -14,11 +14,6 @@ export default class Tools extends React.Component {
     super(props);
     this.state = {idNum: 0,
       company_name: 0}
-    this.button1 = React.createRef();
-    this.button2 = React.createRef();
-    this.button3 = React.createRef();
-    this.button4 = React.createRef();
-    this.button5 = React.createRef();
     this.dataTable = React.createRef();
   }
 

@@ -16,6 +16,9 @@ const Navbar = () => {
           <NavLink to="/tools">
             Tools
           </NavLink>
+          <NavLink to="/wav_viewer">
+            WavViewer
+          </NavLink>
           <NavLink to="/about">
             About Us
           </NavLink>

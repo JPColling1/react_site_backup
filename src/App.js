@@ -8,6 +8,7 @@ import Contact from './pages/contact';
 import Dashboards from './pages/dashboards';
 import Home from './pages';
 import Tools from './pages/tools';
+import WavViewer from './pages/wavViewer';
   
 function App() {
 return (
@@ -19,6 +20,7 @@ return (
         <Route path='/contact' element={<Contact/>} />
         <Route path='/dashboards' element={<Dashboards/>} />
         <Route path='/tools' element={<Tools/>} />
+        <Route path='/wav_viewer' element={<WavViewer/>} />
     </Routes>
     </Router>
 );
