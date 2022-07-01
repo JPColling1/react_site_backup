@@ -11,7 +11,7 @@ export function convertData(dataArray, sampleRate){
 }
 
 export const FrequencySpectrum = () => {
-  return <XYPlot height={2000} width={2000} xDomain={[0,10000]} xType={'log'}>
+  return <XYPlot height={2000} width={2000} xDomain={[0,10000]}>
           <XAxis />
           <YAxis />
           <LineSeries data={graphData}/>

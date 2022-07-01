@@ -5,9 +5,12 @@ import Snare1 from './Snare1.wav';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
+var firstTime = false;
+
 const AudioController = () => {
     //component state
     const [playing, setPlaying] = React.useState(false);
+    const [hasLoaded, setHasLoaded] = React.useState(false);
 
     //component props
     const audioRef = useRef(null);
@@ -83,11 +86,19 @@ const AudioController = () => {
         // console.log(dataArray1);
         // console.log(dataArray2);
 
+        //setHasLoaded(true);
         draw(analyzer1.current, bufferLength.current, dataArray1.current);
+        {debugger}
+        if (firstTime === false){
+            firstTime = true;
+            repeat(analyzer2.current, dataArray2.current, sampleRate);
+        }
     }
 
+    // if (hasLoaded === true){
+    //     create_dataset(analyzer2.current, dataArray2.current, sampleRate);
+    // }
     
-
     //html components
     return (<div>    
         <audio src={Snare1} ref={audioRef} />
@@ -105,11 +116,18 @@ const AudioController = () => {
       </div>);
 }
 
-//create frequency domain data
-function create_dataset(){
-    analyzer2.current.getByteFrequencyData(dataArray2.current);
-    //{debugger}
-    convertData(dataArray2.current, sampleRate);
+//set repeat
+function repeat(analyzer2, dataArray2, sampleRate){
+    {debugger}
+    var timerID = setInterval(create_dataset(analyzer2, dataArray2, sampleRate), 5000);
 }
+
+//create frequency domain data
+function create_dataset(analyzer2, dataArray2, sampleRate){
+    analyzer2.getByteFrequencyData(dataArray2);
+    {debugger}
+    convertData(dataArray2, sampleRate);
+}    
+
 
 export default AudioController;
