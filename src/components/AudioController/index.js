@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Oscillosope, draw, set_CanvasCtx } from './Oscilloscope/index'
-import { FrequencySpectrum, convertData } from './FrequencySpectrum/index';
+//import { FrequencySpectrum, convertData } from './FrequencySpectrum/index';
+import { FrequencyChart, initData } from "./FrequencyChart";
 import Snare1 from './Snare1.wav';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -43,6 +44,7 @@ const AudioController = () => {
 
         //set oscilloscope canvas
         set_CanvasCtx();
+        //set_chart_ctx();
     }   
 
     //play or pause audio
@@ -57,6 +59,9 @@ const AudioController = () => {
             console.log("playing");
             audioElement.current.play();
             setPlaying(true);
+            // console.log("time is at " + audioElement.current.currentTime);
+            // audioElement.current.currentTime = 0;
+            // console.log(audioElement.current.currentTime);
         } else if (playing === true) {
             console.log("pausing");
             audioElement.current.pause();
@@ -70,7 +75,7 @@ const AudioController = () => {
     }
 
     //get fft data
-    function get_datapoints(){
+    const get_datapoints = () => {
         analyzer1.current.fftSize = 2048;
         analyzer2.current.fftSize = 2048;
         bufferLength.current = analyzer1.current.frequencyBinCount;
@@ -83,7 +88,8 @@ const AudioController = () => {
         // console.log(dataArray2);
 
         draw(analyzer1.current, bufferLength.current, dataArray1.current);
-        create_dataset(analyzer2.current, dataArray2.current, sampleRate);
+        //create_dataset(analyzer2.current, dataArray2.current, sampleRate);
+        initData(analyzer2.current, dataArray2.current);
     }
 
     
@@ -97,20 +103,21 @@ const AudioController = () => {
             <span>Play/Pause</span>
         </button>
         <input type="range" min="0" max="2" step="0.01" onChange={event => adjust_volume(event.target.value)}></input>
+
+
         
         <Oscillosope />        
-        <FrequencySpectrum />
+        {/* <FrequencySpectrum /> */}
+        <FrequencyChart SR={sampleRate}/>
         
       </div>);
 }
 
 //create frequency domain data
-function create_dataset(analyzer2, dataArray2, sampleRate){
-    setTimeout(create_dataset, 17, analyzer2, dataArray2, sampleRate);
-    analyzer2.getByteFrequencyData(dataArray2);
-   // {debugger}
-    convertData(dataArray2, sampleRate);
-}    
+// function create_dataset(analyzer2, dataArray2, sampleRate){
+//     setTimeout(create_dataset, 17, analyzer2, dataArray2, sampleRate);
+//     analyzer2.getByteFrequencyData(dataArray2);
+// }    
 
 
 export default AudioController;
