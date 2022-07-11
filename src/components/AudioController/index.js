@@ -9,6 +9,7 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 const AudioController = () => {
     //component state
     const [playing, setPlaying] = React.useState(false);
+    const [time, setTime] = React.useState(0);
 
     //component props
     const audioRef = useRef(null);
@@ -70,8 +71,13 @@ const AudioController = () => {
     }
 
     //adjust gain
-    function adjust_volume (value){
+    const adjust_volume = (value) => {
         gainNode.current.gain.value = value;
+    }
+
+    const adjust_time = (value) => {
+        setTime(value);
+        console.log(time);
     }
 
     //get fft data
@@ -103,6 +109,7 @@ const AudioController = () => {
             <span>Play/Pause</span>
         </button>
         <input type="range" min="0" max="2" step="0.01" onChange={event => adjust_volume(event.target.value)}></input>
+        <input type="range" min="0" max="1" step="0.001" onChange={event => adjust_time(event.target.value)}></input>
 
 
         
