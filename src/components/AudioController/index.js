@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { Oscillosope, draw, set_CanvasCtx } from './Oscilloscope/index'
-//import { FrequencySpectrum, convertData } from './FrequencySpectrum/index';
 import { FrequencyChart, initData } from "./FrequencyChart";
 import Snare1 from './Snare1.wav';
 
@@ -76,8 +75,22 @@ const AudioController = () => {
     }
 
     const adjust_time = (value) => {
-        setTime(value);
-        console.log(time);
+        fetch("/currentTime", {
+            method:"POST",
+            body: JSON.stringify({"currTime": value}),
+            headers: new Headers({ 
+                'Content-Type': 'application/json',
+            }),
+            
+        }).then(response  => {
+            return response.json();
+        }).then(data => {
+            console.log(data);
+        }).catch(error => console.log(error));
+
+        value += 1;
+        //setTime(value);
+        //console.log(time);
     }
 
     //get fft data
@@ -109,12 +122,9 @@ const AudioController = () => {
             <span>Play/Pause</span>
         </button>
         <input type="range" min="0" max="2" step="0.01" onChange={event => adjust_volume(event.target.value)}></input>
-        <input type="range" min="0" max="1" step="0.001" onChange={event => adjust_time(event.target.value)}></input>
+        <input type="range" min="0" max="1" step="0.01" onChange={event => adjust_time(event.target.value)}></input>
 
-
-        
-        <Oscillosope />        
-        {/* <FrequencySpectrum /> */}
+        <Oscillosope />
         <FrequencyChart SR={sampleRate}/>
         
       </div>);
