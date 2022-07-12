@@ -83,34 +83,47 @@ export const FrequencyChart = (props) => {
   var chartRef = useRef(null);
 
   useEffect(() => {
-    {debugger}
+    //{debugger}
     fetch("/fftdata").then(
       res => res.json()
     ).then(
       data => {
         setChartData({
           datasets: [{
+            indexAxis: 'x',
+            parsing: false,
             label: "test data",
             data: JSON.parse(data["data"]),
             backgroundColor: "#0000FF",
             borderColor: "#0000FF",
             //hitRadius: 0,
-            pointHitRadius: 0,
-            pointHoverRadius: 0,
+            
+            decimation: {
+              enabled: true,
+              algorithm: 'min-max',
+            },
           }]
         });
       }
     )
     setChartOptions({
+        spanGaps: true,
+        animation: false,
+        normalized: true,
         interaction: {
           mode: 'x',
         },
         elements: {
           line: {
-              tension: 0, // disables bezier curves
+              lineTension: 0,
+              tension: false,
+              stepped: 0,
+              borderDash: [],
           },
           point: {
-              pointRadius: 0
+              radius: 0,
+              hitRadius: 0,
+              hoverRadius: 0,
           }
         },
         responsive: true,
@@ -125,15 +138,28 @@ export const FrequencyChart = (props) => {
             tooltip: {
               enabled: false,
             },
-            decimation: {
-              enabled: true,
-              algorithm: 'min-max',
-            }
         },
         scales: {
           x: {
             type: 'linear',
+            ticks : {
+              minRotation: 0,
+              maxRotation: 0,
+              sampleSize: 10,
+            },
+            min: 0,
+            max: 12500,
           },
+          y: {
+            type: 'linear',
+            ticks : {
+              minRotation: 0,
+              maxRotation: 0,
+              sampleSize: 10,
+            },
+            min: -140,
+            max: 0,
+          }
         },
     });
 
