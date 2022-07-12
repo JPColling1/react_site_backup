@@ -2,15 +2,27 @@ import React, {useState, useEffect, useRef } from "react";
 import Dygraph from 'dygraphs';
 import './dygraph.css';
 
+//listen for key press
+// function listenForKeyPress(event, graph){
+//   if (event.key === "ArrowLeft" && event.shiftKey === true) {
+//     stepCursor("left", graph);
+//   } else if (event.key === "ArrowRight" && event.shiftKey === true){
+//     stepCursor("right", graph);
+//   }
+// }
+
 //step left or right one datapoint
 function stepCursor(direction, graph){
-  var selected = graph.getSelection();
-  if (direction=="left"){
-    graph.setSelection(selected - 1);
-    //set cursor to nearest datapoint left
-  } else {
-    graph.setSelection(selected + 1);
-    //set cursor to nearest datapoint right
+  if (graph){
+    {debugger}
+    var selected = graph.getSelection();
+    if (direction=="left"){
+      graph.setSelection(selected - 1);
+      //set cursor to nearest datapoint left
+    } else {
+      graph.setSelection(selected + 1);
+      //set cursor to nearest datapoint right
+    }
   }
 }
 
@@ -43,6 +55,16 @@ export const FrequencyChart = (props) => {
         setGraphData(JSON.parse(data["data"]));
       }
     )
+
+    //listen for arrow key presses
+    // document.addEventListener('keydown', event => {
+    //   {debugger}
+    //   if (event.key === "ArrowLeft" && event.shiftKey === true) {
+    //     stepCursor("left", graph);
+    //   } else if (event.key === "ArrowRight" && event.shiftKey === true){
+    //     stepCursor("right", graph);
+    //   }
+    // });
   }, []);
 
   //create graph object
@@ -76,4 +98,6 @@ export const FrequencyChart = (props) => {
           <div onClick={() => {drawHighlight(1000, 2000, graph)}} id="frequency"></div>
         </div>)
 }
+
+//onKeyDown={() => {listenForKeyPress(graph)}}
 
