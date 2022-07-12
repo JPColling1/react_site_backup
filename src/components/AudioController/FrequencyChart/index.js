@@ -2,16 +2,36 @@ import React, {useState, useEffect, useRef } from "react";
 import Dygraph from 'dygraphs';
 import './dygraph.css';
 
+//step left or right one datapoint
+function stepCursor(direction, graph){
+  var selected = graph.getSelection();
+  if (direction=="left"){
+    graph.setSelection(selected - 1);
+    //set cursor to nearest datapoint left
+  } else {
+    graph.setSelection(selected + 1);
+    //set cursor to nearest datapoint right
+  }
+}
+
 //Highlight a band given a start and end frequency
 function drawHighlight(startFreq, endFreq, graph) {
-  var left = graph.toDomXCoord(startFreq);
-  var right = graph.toDomXCoord(endFreq);
+  if (graph){
+    var start = graph.toDomXCoord(startFreq);
+    var end = graph.toDomXCoord(endFreq);
 
-  canvas.fillStyle = "rgba(255, 255, 102, 0.5)";
-  canvas.fillRect(left, top, right - left, bottom - top);
+    const { canvas_ctx_: ctx, layout_:area} = graph;
+    const {area_: {y: top, h: height}} = area;
+
+    ctx.fillStyle = "rgba(255, 255, 102, 0.5)";
+    ctx.fillRect(start, top, end - start, height);
+  }
 }
 
 export const FrequencyChart = (props) => {
+
+  const [graph, setGraph] = useState(null);
+  const [graphData, setGraphData] = useState(null);
 
   useEffect(() => {
     //fetch graph data
@@ -19,20 +39,20 @@ export const FrequencyChart = (props) => {
       res => res.json()
     ).then(
       data => {
-        {debugger}
         createGraph(JSON.parse(data["data"]));
+        setGraphData(JSON.parse(data["data"]));
       }
     )
   }, []);
 
   //create graph object
   const createGraph = (data) => {
-    const g = new Dygraph(
-
+    setGraph(new Dygraph(
       // containing div
       document.getElementById("graph"),
-  
+      //data
       data,
+      //options
       {
         hideOverlayOnMouseOut: false,
         labels: ["frequency(Hz)", "level(dB)"],
@@ -43,21 +63,17 @@ export const FrequencyChart = (props) => {
         title: "Frequency Spectrum",
         xlabel: "frequency(Hz)",
         ylabel: "level(dB)",
-        y2label: "will you show?",
+        y2label: "will you show up?",
       }
-      // CSV or path to a CSV file.
-      // "Date,Temperature\n" +
-      // "2008-05-07,75\n" +
-      // "2008-05-08,70\n" +
-      // "2008-05-09,80\n"
-  
-    );
-    drawHighlight(1000, 2000, g);
+    ));
   }
 
+  //{debugger}
   return(<div>
+          <button onClick={() => {stepCursor("left", graph)}}>Step left one datapoint</button>
+          <button onClick={() => {stepCursor("right", graph)}}>Step right one datapoint</button>
           <div id="graph"></div>
-          <div id="frequency"></div>
+          <div onClick={() => {drawHighlight(1000, 2000, graph)}} id="frequency"></div>
         </div>)
 }
 
