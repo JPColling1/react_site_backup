@@ -56,12 +56,25 @@ export const FrequencyChart = (props) => {
         setChartData({
           datasets: [{
             label: "test data",
-            data: data["data"],
+            data: JSON.parse(data["data"]),
+            backgroundColor: "#0000FF",
+            borderColor: "#0000FF",
           }]
         });
       }
     )
     setChartOptions({
+        interaction: {
+          mode: 'x',
+        },
+        elements: {
+          line: {
+              tension: 0, // disables bezier curves
+          },
+          point: {
+              pointRadius: 0
+          }
+        },
         responsive: true,
         plugins: {
             legend: {
