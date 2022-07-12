@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef } from "react";
 
 //import { Bar } from "react-chartjs-2";
 import {
@@ -23,23 +23,55 @@ ChartJs.register(
     PointElement,
 );
 
-var analyzer2;
-var dataArray2;
-var mounted = false;
+// var analyzer2;
+// var dataArray2;
+// var mounted = false;
 
-export function initData(analyzer, dataArray){
-  analyzer2 = analyzer;
-  dataArray2 = dataArray;
-  mounted = true;
-}
 
-function convertData(dataArray, sampleRate){
-  var graphData = [];
-  for (let i = 0; i<dataArray.length; i++){
-      var xVar = (sampleRate / 2) * (i/dataArray.length);
-      graphData[i] = {x:xVar, y:dataArray[i]};
+// export function initData(analyzer, dataArray){
+//   analyzer2 = analyzer;
+//   dataArray2 = dataArray;
+//   mounted = true;
+// }
+
+// function convertData(dataArray, sampleRate){
+//   var graphData = [];
+//   for (let i = 0; i<dataArray.length; i++){
+//       var xVar = (sampleRate / 2) * (i/dataArray.length);
+//       graphData[i] = {x:xVar, y:dataArray[i]};
+//   }
+//   return graphData;
+// }
+
+const crosshair = (chart, mousemove) => {
+  //console.log(mousemove);
+  chart.update('none');
+
+  //{debugger}
+
+  // const x = mousemove.offsetX;
+  // const y = mousemove.offsetY;
+
+  const { ctx, chartArea:{ top, bottom, left, right }} = chart;
+
+  ctx.save();
+
+  ctx.strokeStyle = 'rgba(102, 102, 102, 1)';
+  ctx.lineWidth = 1;
+
+  if (mousemove.offsetX >= left && mousemove.offsetX <= right && mousemove.offsetY >= top && mousemove.offsetY <= bottom){
+    // ctx.beginPath();
+    // ctx.moveTo(left, mousemove.offsetY);
+    // ctx.lineTo(right, mousemove.offsetY);
+    // ctx.stroke();
+    // ctx.closePath();
+
+    ctx.beginPath();
+    ctx.moveTo(mousemove.offsetX, top);
+    ctx.lineTo(mousemove.offsetX, bottom);
+    ctx.stroke();
+    ctx.closePath();
   }
-  return graphData;
 }
 
 export const FrequencyChart = (props) => {
@@ -48,7 +80,10 @@ export const FrequencyChart = (props) => {
   });
   const [chartOptions, setChartOptions] = useState({});
 
+  var chartRef = useRef(null);
+
   useEffect(() => {
+    {debugger}
     fetch("/fftdata").then(
       res => res.json()
     ).then(
@@ -59,6 +94,9 @@ export const FrequencyChart = (props) => {
             data: JSON.parse(data["data"]),
             backgroundColor: "#0000FF",
             borderColor: "#0000FF",
+            //hitRadius: 0,
+            pointHitRadius: 0,
+            pointHoverRadius: 0,
           }]
         });
       }
@@ -84,6 +122,13 @@ export const FrequencyChart = (props) => {
                 display: true,
                 text: "Frequency Spectrum"
             },
+            tooltip: {
+              enabled: false,
+            },
+            decimation: {
+              enabled: true,
+              algorithm: 'min-max',
+            }
         },
         scales: {
           x: {
@@ -91,22 +136,31 @@ export const FrequencyChart = (props) => {
           },
         },
     });
-    create_dataset();
+
+   // var chartThing = chartRef.current;
+
+   // {debugger}
+    if (chartRef.current.canvas !== null){
+      chartRef.current.canvas.addEventListener('mousemove', (e) => {
+        crosshair(chartRef.current, e);
+      })
+    }
+    //create_dataset();
   }, []);
 
-  const create_dataset = () => {
-    setTimeout(create_dataset, 17);
-    if (mounted === true){
-      analyzer2.getByteFrequencyData(dataArray2);
-      setChartData({datasets: [{
-          label: "fftData",
-          data: convertData(dataArray2, props.SR),
-        }]
-      });
-    }
-  } 
-  
+  // const create_dataset = () => {
+  //   setTimeout(create_dataset, 17);
+  //   if (mounted === true){
+  //     analyzer2.getByteFrequencyData(dataArray2);
+  //     setChartData({datasets: [{
+  //         label: "fftData",
+  //         data: convertData(dataArray2, props.SR),
+  //       }]
+  //     });
+  //   }
+  // } 
 
-  return(<Line options={chartOptions} data={chartData}/>)
+  //{debugger}
+  return(<Line options={chartOptions} ref={chartRef} data={chartData}/>)
 }
 

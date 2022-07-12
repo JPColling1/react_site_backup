@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Oscillosope, draw, set_CanvasCtx } from './Oscilloscope/index'
-import { FrequencyChart, initData } from "./FrequencyChart";
+import { FrequencyChart } from "./FrequencyChart";
 import Snare1 from './Snare1.wav';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -108,7 +108,7 @@ const AudioController = () => {
 
         draw(analyzer1.current, bufferLength.current, dataArray1.current);
         //create_dataset(analyzer2.current, dataArray2.current, sampleRate);
-        initData(analyzer2.current, dataArray2.current);
+        //initData(analyzer2.current, dataArray2.current);
     }
 
     
