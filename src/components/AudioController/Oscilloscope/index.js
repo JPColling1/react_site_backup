@@ -1,12 +1,6 @@
 import React, {useState, useEffect, useRef } from "react";
 import Dygraph from 'dygraphs';
 
-// var canvasRef;
-// var canvasCtx;
-// const width = 500;
-// const height = 500;
-
-//canvas
 //step left or right one datapoint
 function stepCursor(direction, graph){
     if (graph){
@@ -28,6 +22,8 @@ export const Oscillosope = () => {
 
     const [graph, setGraph] = useState(null);
     const [graphData, setGraphData] = useState(null);
+    const [minimum, setMinimum] = useState(null);
+    const [maximum, setMaximum] = useState(null);
 
     useEffect(() => {
         //fetch graph data
@@ -35,9 +31,28 @@ export const Oscillosope = () => {
             res => res.json()
         ).then(
             data => {
-            {debugger}
-            createGraph(JSON.parse(data["data"]));
-            setGraphData(JSON.parse(data["data"]));
+                let parsedData = JSON.parse(data["data"]);
+                createGraph(parsedData);
+                setGraphData(parsedData);
+            }
+        )
+
+        //set graph minimum value
+        fetch("/mintime").then(
+            res => res.json()
+        ).then(
+            data => {
+                {debugger}
+                setMinimum(JSON.parse(data["data"]))
+            }
+        )
+
+        //set graph maximum value
+        fetch("/maxtime").then(
+            res => res.json()
+        ).then(
+            data => {
+                setMaximum(JSON.parse(data["data"]));
             }
         )
     }, []);
@@ -69,93 +84,6 @@ export const Oscillosope = () => {
                 <button onClick={() => {stepCursor("right", graph)}}>Step right one datapoint</button>
                 <div id="oscilloscope"></div>
                 <div id="labels1"></div>
+                <p>Peak to peak level: {String(maximum - minimum)}</p>
         </div>);
 }
-
-
-
-
-
-
-
-
-
-//create context for drawing and clear canvas
-// export function set_CanvasCtx(){
-//     canvasCtx = canvasRef.current.getContext('2d');
-//     canvasCtx.clearRect(0, 0, width, height);
-// }
-
-// //draw on canvas
-// export function draw(analyzer1, bufferLength, dataArray1){
-//     requestAnimationFrame(function() {draw(analyzer1, bufferLength, dataArray1);});
-//     analyzer1.getByteTimeDomainData(dataArray1);
-
-//     //var canvasCtx = canvasRef.current.getContext('2d');
-
-//     canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-//     canvasCtx.fillRect(0, 0, width, height);
-
-//     canvasCtx.lineWidth = 2;
-//     canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
-//     canvasCtx.beginPath();
-
-//     var sliceWidth = width * 1.0 / bufferLength;
-//     var x = 0;
-
-//     for(var i = 0; i < bufferLength; i++) {
-
-//         var v = dataArray1[i] / 128.0;
-//         var y = v * height/2;
-
-//         if(i === 0) {
-//         canvasCtx.moveTo(x, y);
-//         } else {
-//         canvasCtx.lineTo(x, y);
-//         }
-
-//         x += sliceWidth;
-//     }
-
-//     canvasCtx.lineTo(canvasRef.width, canvasRef.height/2);
-//     canvasCtx.stroke();
-// }export function set_CanvasCtx(){
-//     canvasCtx = canvasRef.current.getContext('2d');
-//     canvasCtx.clearRect(0, 0, width, height);
-// }
-
-// //draw on canvas
-// export function draw(analyzer1, bufferLength, dataArray1){
-//     requestAnimationFrame(function() {draw(analyzer1, bufferLength, dataArray1);});
-//     analyzer1.getByteTimeDomainData(dataArray1);
-
-//     //var canvasCtx = canvasRef.current.getContext('2d');
-
-//     canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-//     canvasCtx.fillRect(0, 0, width, height);
-
-//     canvasCtx.lineWidth = 2;
-//     canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
-//     canvasCtx.beginPath();
-
-//     var sliceWidth = width * 1.0 / bufferLength;
-//     var x = 0;
-
-//     for(var i = 0; i < bufferLength; i++) {
-
-//         var v = dataArray1[i] / 128.0;
-//         var y = v * height/2;
-
-//         if(i === 0) {
-//         canvasCtx.moveTo(x, y);
-//         } else {
-//         canvasCtx.lineTo(x, y);
-//         }
-
-//         x += sliceWidth;
-//     }
-
-//     canvasCtx.lineTo(canvasRef.width, canvasRef.height/2);
-//     canvasCtx.stroke();
-// }
-
