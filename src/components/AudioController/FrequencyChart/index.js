@@ -1,192 +1,103 @@
 import React, {useState, useEffect, useRef } from "react";
+import Dygraph from 'dygraphs';
+import './dygraph.css';
 
-//import { Bar } from "react-chartjs-2";
-import {
-    Chart as ChartJs,
-    CategoryScale,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    PointElement,
-    LinearScale,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-
-ChartJs.register(
-    CategoryScale,
-    LinearScale,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    PointElement,
-);
-
-// var analyzer2;
-// var dataArray2;
-// var mounted = false;
-
-
-// export function initData(analyzer, dataArray){
-//   analyzer2 = analyzer;
-//   dataArray2 = dataArray;
-//   mounted = true;
-// }
-
-// function convertData(dataArray, sampleRate){
-//   var graphData = [];
-//   for (let i = 0; i<dataArray.length; i++){
-//       var xVar = (sampleRate / 2) * (i/dataArray.length);
-//       graphData[i] = {x:xVar, y:dataArray[i]};
+//listen for key press
+// function listenForKeyPress(event, graph){
+//   if (event.key === "ArrowLeft" && event.shiftKey === true) {
+//     stepCursor("left", graph);
+//   } else if (event.key === "ArrowRight" && event.shiftKey === true){
+//     stepCursor("right", graph);
 //   }
-//   return graphData;
 // }
 
-const crosshair = (chart, mousemove) => {
-  //console.log(mousemove);
-  chart.update('none');
+//step left or right one datapoint
+function stepCursor(direction, graph){
+  if (graph){
+    {debugger}
+    var selected = graph.getSelection();
+    if (direction=="left"){
+      graph.setSelection(selected - 1);
+      //set cursor to nearest datapoint left
+    } else {
+      graph.setSelection(selected + 1);
+      //set cursor to nearest datapoint right
+    }
+  }
+}
 
-  //{debugger}
+//Highlight a band given a start and end frequency
+function drawHighlight(startFreq, endFreq, graph) {
+  if (graph){
+    var start = graph.toDomXCoord(startFreq);
+    var end = graph.toDomXCoord(endFreq);
 
-  // const x = mousemove.offsetX;
-  // const y = mousemove.offsetY;
+    const { canvas_ctx_: ctx, layout_:area} = graph;
+    const {area_: {y: top, h: height}} = area;
 
-  const { ctx, chartArea:{ top, bottom, left, right }} = chart;
-
-  ctx.save();
-
-  ctx.strokeStyle = 'rgba(102, 102, 102, 1)';
-  ctx.lineWidth = 1;
-
-  if (mousemove.offsetX >= left && mousemove.offsetX <= right && mousemove.offsetY >= top && mousemove.offsetY <= bottom){
-    // ctx.beginPath();
-    // ctx.moveTo(left, mousemove.offsetY);
-    // ctx.lineTo(right, mousemove.offsetY);
-    // ctx.stroke();
-    // ctx.closePath();
-
-    ctx.beginPath();
-    ctx.moveTo(mousemove.offsetX, top);
-    ctx.lineTo(mousemove.offsetX, bottom);
-    ctx.stroke();
-    ctx.closePath();
+    ctx.fillStyle = "rgba(255, 255, 102, 0.5)";
+    ctx.fillRect(start, top, end - start, height);
   }
 }
 
 export const FrequencyChart = (props) => {
-  const [chartData, setChartData] = useState({
-    datasets:[],
-  });
-  const [chartOptions, setChartOptions] = useState({});
 
-  var chartRef = useRef(null);
+  const [graph, setGraph] = useState(null);
+  const [graphData, setGraphData] = useState(null);
 
   useEffect(() => {
-    //{debugger}
+    //fetch graph data
     fetch("/fftdata").then(
       res => res.json()
     ).then(
       data => {
-        setChartData({
-          datasets: [{
-            indexAxis: 'x',
-            parsing: false,
-            label: "test data",
-            data: JSON.parse(data["data"]),
-            backgroundColor: "#0000FF",
-            borderColor: "#0000FF",
-            //hitRadius: 0,
-            
-            decimation: {
-              enabled: true,
-              algorithm: 'min-max',
-            },
-          }]
-        });
+        createGraph(JSON.parse(data["data"]));
+        setGraphData(JSON.parse(data["data"]));
       }
     )
-    setChartOptions({
-        spanGaps: true,
-        animation: false,
-        normalized: true,
-        interaction: {
-          mode: 'x',
-        },
-        elements: {
-          line: {
-              lineTension: 0,
-              tension: false,
-              stepped: 0,
-              borderDash: [],
-          },
-          point: {
-              radius: 0,
-              hitRadius: 0,
-              hoverRadius: 0,
-          }
-        },
-        responsive: true,
-        plugins: {
-            legend: {
-                position: "top",
-            },
-            title: {
-                display: true,
-                text: "Frequency Spectrum"
-            },
-            tooltip: {
-              enabled: false,
-            },
-        },
-        scales: {
-          x: {
-            type: 'linear',
-            ticks : {
-              minRotation: 0,
-              maxRotation: 0,
-              sampleSize: 10,
-            },
-            min: 0,
-            max: 12500,
-          },
-          y: {
-            type: 'linear',
-            ticks : {
-              minRotation: 0,
-              maxRotation: 0,
-              sampleSize: 10,
-            },
-            min: -140,
-            max: 0,
-          }
-        },
-    });
 
-   // var chartThing = chartRef.current;
-
-   // {debugger}
-    if (chartRef.current.canvas !== null){
-      chartRef.current.canvas.addEventListener('mousemove', (e) => {
-        crosshair(chartRef.current, e);
-      })
-    }
-    //create_dataset();
+    //listen for arrow key presses
+    // document.addEventListener('keydown', event => {
+    //   {debugger}
+    //   if (event.key === "ArrowLeft" && event.shiftKey === true) {
+    //     stepCursor("left", graph);
+    //   } else if (event.key === "ArrowRight" && event.shiftKey === true){
+    //     stepCursor("right", graph);
+    //   }
+    // });
   }, []);
 
-  // const create_dataset = () => {
-  //   setTimeout(create_dataset, 17);
-  //   if (mounted === true){
-  //     analyzer2.getByteFrequencyData(dataArray2);
-  //     setChartData({datasets: [{
-  //         label: "fftData",
-  //         data: convertData(dataArray2, props.SR),
-  //       }]
-  //     });
-  //   }
-  // } 
+  //create graph object
+  const createGraph = (data) => {
+    setGraph(new Dygraph(
+      // containing div
+      document.getElementById("graph"),
+      //data
+      data,
+      //options
+      {
+        hideOverlayOnMouseOut: false,
+        labels: ["frequency(Hz)", "level(dB)"],
+        labelsSeparateLines: true,
+        labelsDiv: document.getElementById("frequency"),
+        height: 500,
+        width: 1000,
+        title: "Frequency Spectrum",
+        xlabel: "frequency(Hz)",
+        ylabel: "level(dB)",
+        y2label: "will you show up?",
+      }
+    ));
+  }
 
   //{debugger}
-  return(<Line options={chartOptions} ref={chartRef} data={chartData}/>)
+  return(<div>
+          <button onClick={() => {stepCursor("left", graph)}}>Step left one datapoint</button>
+          <button onClick={() => {stepCursor("right", graph)}}>Step right one datapoint</button>
+          <div id="graph"></div>
+          <div onClick={() => {drawHighlight(1000, 2000, graph)}} id="frequency"></div>
+        </div>)
 }
+
+//onKeyDown={() => {listenForKeyPress(graph)}}
 
