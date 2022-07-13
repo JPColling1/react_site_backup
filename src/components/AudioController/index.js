@@ -43,7 +43,7 @@ const AudioController = () => {
         console.log("starting audio");
 
         //set oscilloscope canvas
-        set_CanvasCtx();
+        //set_CanvasCtx();
         //set_chart_ctx();
     }   
 
@@ -106,7 +106,7 @@ const AudioController = () => {
         // console.log(dataArray1);
         // console.log(dataArray2);
 
-        draw(analyzer1.current, bufferLength.current, dataArray1.current);
+        //draw(analyzer1.current, bufferLength.current, dataArray1.current);
         //create_dataset(analyzer2.current, dataArray2.current, sampleRate);
         //initData(analyzer2.current, dataArray2.current);
     }
@@ -125,7 +125,7 @@ const AudioController = () => {
         <input type="range" min="0" max="1" step="0.01" onChange={event => adjust_time(event.target.value)}></input>
 
         <Oscillosope />
-        <FrequencyChart SR={sampleRate}/>
+        <FrequencyChart />
         
       </div>);
 }
