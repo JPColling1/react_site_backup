@@ -40,7 +40,7 @@ function drawHighlight(startFreq, endFreq, graph) {
   }
 }
 
-export const FrequencyChart = (props) => {
+export const FrequencyChart = () => {
 
   const [graph, setGraph] = useState(null);
   const [graphData, setGraphData] = useState(null);
@@ -55,16 +55,6 @@ export const FrequencyChart = (props) => {
         setGraphData(JSON.parse(data["data"]));
       }
     )
-
-    //listen for arrow key presses
-    // document.addEventListener('keydown', event => {
-    //   {debugger}
-    //   if (event.key === "ArrowLeft" && event.shiftKey === true) {
-    //     stepCursor("left", graph);
-    //   } else if (event.key === "ArrowRight" && event.shiftKey === true){
-    //     stepCursor("right", graph);
-    //   }
-    // });
   }, []);
 
   //create graph object
