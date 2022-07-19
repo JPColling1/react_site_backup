@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Oscillosope, draw, set_CanvasCtx } from './Oscilloscope/index'
 import { FrequencyChart } from "./FrequencyChart";
 import PathSetter from "./PathSetter";
+import PartFetcher from "./PartFetcher";
 import Snare1 from './Snare1.wav';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -105,6 +106,8 @@ const AudioViewer = () => {
         <div>Paste file path here</div>
         <input onChange={(e) => handlePathChange(e)}></input>
         <PathSetter filePath={filePath} readyData={setReadyforData}/>
+
+        <PartFetcher />
 
         {/* <audio src={Snare1} ref={audioRef} /> */}
 
