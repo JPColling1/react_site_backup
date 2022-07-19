@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PartItem from "./PartItem";
 
 //fetch part objects with the newDB api and return them as json objects in a list
 
@@ -19,13 +20,13 @@ const PartFetcher = () => {
         
     }, [])
 
-    const getParts = () => {
-        //fetch parts from newDB api and store in list
-    }
-
     return<div id="myDropdown" className="dropdown-content">
         <input type="text" placeholder="Search.." id="partInput" />
-        <div>Selectable Part</div>
+        {
+            partsList.map((item) => (
+                <PartItem name={item.partId}/>
+            ))
+        }
     </div>
 }
 
