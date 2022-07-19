@@ -1,10 +1,10 @@
 import React from 'react';
-import AudioController from '../components/AudioController/index';
+import AudioViewer from '../components/AudioViewer/index';
 
 
 const WavViewer = () => {
 
-  return(<AudioController/>);
+  return(<AudioViewer/>);
 }
 
 export default WavViewer;
