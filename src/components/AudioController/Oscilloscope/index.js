@@ -17,45 +17,48 @@ function stepCursor(direction, graph){
 }
 
 //Oscilloscope Component
-export const Oscillosope = () => {
+export const Oscillosope = (props) => {
     //canvasRef = useRef(null);
 
     const [graph, setGraph] = useState(null);
     const [graphData, setGraphData] = useState(null);
     const [minimum, setMinimum] = useState(null);
     const [maximum, setMaximum] = useState(null);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        //fetch graph data
-        fetch("/timedata").then(
-            res => res.json()
-        ).then(
-            data => {
-                let parsedData = JSON.parse(data["data"]);
-                createGraph(parsedData);
-                setGraphData(parsedData);
+        if (props.readyForData !== isReady){
+            if (props.readyForData){
+                //fetch graph data
+                fetch("/timedata").then(
+                res => res.json()
+                ).then(
+                    data => {
+                        createGraph(JSON.parse(data["data"]));
+                        setGraphData(JSON.parse(data["data"]));
+                    }
+                )
+                //set graph minimum value
+                fetch("/mintime").then(
+                    res => res.json()
+                ).then(
+                    data => {
+                        {debugger}
+                        setMinimum(JSON.parse(data["data"]))
+                    }
+                )
+                //set graph maximum value
+                fetch("/maxtime").then(
+                    res => res.json()
+                ).then(
+                    data => {
+                        setMaximum(JSON.parse(data["data"]));
+                    }
+                )
             }
-        )
-
-        //set graph minimum value
-        fetch("/mintime").then(
-            res => res.json()
-        ).then(
-            data => {
-                {debugger}
-                setMinimum(JSON.parse(data["data"]))
-            }
-        )
-
-        //set graph maximum value
-        fetch("/maxtime").then(
-            res => res.json()
-        ).then(
-            data => {
-                setMaximum(JSON.parse(data["data"]));
-            }
-        )
-    }, []);
+            setIsReady(props.readyForData);
+        }
+    }, [props.readyForData]);
 
     const createGraph = (data) => {
         setGraph(new Dygraph(
