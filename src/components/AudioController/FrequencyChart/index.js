@@ -40,22 +40,28 @@ function drawHighlight(startFreq, endFreq, graph) {
   }
 }
 
-export const FrequencyChart = () => {
+export const FrequencyChart = (props) => {
 
   const [graph, setGraph] = useState(null);
   const [graphData, setGraphData] = useState(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    //fetch graph data
-    fetch("/fftdata").then(
-      res => res.json()
-    ).then(
-      data => {
-        createGraph(JSON.parse(data["data"]));
-        setGraphData(JSON.parse(data["data"]));
+    if (props.readyForData !== isReady){
+      if (props.readyForData){
+        //fetch graph data
+        fetch("/fftdata").then(
+          res => res.json()
+        ).then(
+          data => {
+            createGraph(JSON.parse(data["data"]));
+            setGraphData(JSON.parse(data["data"]));
+          }
+        )
       }
-    )
-  }, []);
+      setIsReady(props.readyForData);
+    }
+  }, [props.readyForData]);
 
   //create graph object
   const createGraph = (data) => {
