@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PartItem from "./PartItem";
+import SearchRender from "./SearchRender";
 
 //fetch part objects with the newDB api and return them as json objects in a list
 
@@ -22,11 +22,7 @@ const PartFetcher = () => {
 
     return<div id="myDropdown" className="dropdown-content">
         <input type="text" placeholder="Search.." id="partInput" />
-        {
-            partsList.map((item) => (
-                <PartItem name={item.partId}/>
-            ))
-        }
+        <SearchRender partsList={partsList}/>
     </div>
 }
 
