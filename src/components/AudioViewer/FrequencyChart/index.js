@@ -14,7 +14,7 @@ import './dygraph.css';
 //step left or right one datapoint
 function stepCursor(direction, graph){
   if (graph){
-    {debugger}
+    //{debugger}
     var selected = graph.getSelection();
     if (direction=="left"){
       graph.setSelection(selected - 1);
@@ -40,15 +40,32 @@ function drawHighlight(startFreq, endFreq, graph) {
   }
 }
 
-export const FrequencyChart = (props) => {
+//get highlight regions from backend
+const fetchHighlight = (graph) => {
+  fetch("/highlights").then(
+    res => res.json()
+  ).then(
+    data => {
+      {debugger}
+      let freqList = JSON.parse(data["data"]);
+      for (let i = 0; i<freqList.length; i++){
+        drawHighlight(freqList[i][0], freqList[i][1], graph);
+      }
+    }
+  );
+}
+
+export const FrequencyChart = ( { readyForData, getHandleChanges } ) => {
 
   const [graph, setGraph] = useState(null);
   const [graphData, setGraphData] = useState(null);
   const [isReady, setIsReady] = useState(false);
 
+  const graphRef = useRef(null);
+
   useEffect(() => {
-    if (props.readyForData !== isReady){
-      if (props.readyForData){
+    if (readyForData !== isReady){
+      if (readyForData){
         //fetch graph data
         fetch("/fftdata").then(
           res => res.json()
@@ -57,15 +74,23 @@ export const FrequencyChart = (props) => {
             createGraph(JSON.parse(data["data"]));
             setGraphData(JSON.parse(data["data"]));
           }
-        )
+        );
       }
-      setIsReady(props.readyForData);
+      setIsReady(readyForData);
+      //{debugger}
+      getHandleChanges(handleChanges); //send function to highlight graph up a level to filter itself down to speed input and part item components
     }
-  }, [props.readyForData]);
+  }, [readyForData]);
+
+  //handle clicking on partItem or updating speed values
+  const handleChanges = () => {
+    {debugger}
+    fetchHighlight(graphRef.current);
+  }
 
   //create graph object
   const createGraph = (data) => {
-    setGraph(new Dygraph(
+    var newGraph = new Dygraph(
       // containing div
       document.getElementById("graph"),
       //data
@@ -83,7 +108,10 @@ export const FrequencyChart = (props) => {
         ylabel: "level(dB)",
         y2label: "will you show up?",
       }
-    ));
+    );
+    setGraph(newGraph);
+    graphRef.current = newGraph;
+    {debugger}
   }
 
   //{debugger}
