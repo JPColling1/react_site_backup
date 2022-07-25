@@ -13,6 +13,7 @@ const AudioViewer = () => {
     // const [time, setTime] = React.useState(0);
     const [filePath, setFilePath] = React.useState(0);
     const [readyForData, setReadyforData] = React.useState(false);
+    const [handleChanges, setHandleChanges] = React.useState(null);
 
     //component props
     // const audioRef = useRef(null);
@@ -96,9 +97,16 @@ const AudioViewer = () => {
     //     //setTime(value);
     //     //console.log(time);
     // }
+
+    //set file path on path change
     const handlePathChange = (e) => {
         setReadyforData(false);
         setFilePath(e.target.value);
+    }
+
+    //set function to highlight regions of frequency chart
+    const getHandleChanges = (method) => {
+        setHandleChanges(() => method);
     }
 
     //html components
@@ -107,7 +115,7 @@ const AudioViewer = () => {
         <input onChange={(e) => handlePathChange(e)}></input>
         <PathSetter filePath={filePath} readyData={setReadyforData}/>
 
-        <PartFetcher />
+        <PartFetcher handleChanges={handleChanges}/>
 
         {/* <audio src={Snare1} ref={audioRef} /> */}
 
@@ -120,7 +128,7 @@ const AudioViewer = () => {
         {/* <input type="range" min="0" max="1" step="0.01" onChange={event => adjust_time(event.target.value)}></input> */}
 
         <Oscillosope readyForData={readyForData}/>
-        <FrequencyChart readyForData={readyForData}/>
+        <FrequencyChart readyForData={readyForData} getHandleChanges={getHandleChanges}/>
         
       </div>);
 }
