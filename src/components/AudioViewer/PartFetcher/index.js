@@ -6,26 +6,28 @@ import SpeedInput from "./SpeedInput";
 //fetch part objects with the newDB api and return them as json objects in a list
 
 
-const PartFetcher = () => {
+const PartFetcher = ( { handleChanges } ) => {
+    //set state
     const [partsList, setPartsList] = useState([]);
     const [value, setValue] = useState("");
     const [toggled, setToggled] = useState(false);
     const [speed, setSpeed] = useState(0);
     const [currentId, setCurrentId] = useState(0);
 
-
+    //ref to search box input
     var inputRef1 = useRef(null);
     const setInputRef = (ref) => {
         inputRef1.current = ref;
     }
 
+    //list of refs to PartItem components
     var refList = useRef(null);
     const setRefList = (refs) => {
         refList.current = refs;
     }
 
+    //fetch parts and put response in list
     useEffect(() => {
-        //fetch parts and put response in parts List
         fetch("/partsList").then(
             res => res.json()
         ).then(
@@ -37,11 +39,11 @@ const PartFetcher = () => {
         
     }, [])
 
+    //Listen for clicks outside of the search dropdown and close if appropriate
     useEffect(() => {
         function handleClickOutside(event) {
             //check if any partItems are within click bounds
             let inList = false;
-            //{debugger}
             if (refList.current !== null){
                 for (let i = 0; i < refList.current.length; i++){
                     if (refList.current[i].contains(event.target)){
@@ -61,14 +63,10 @@ const PartFetcher = () => {
         };
     })
 
-    const handleSelection = (idNum) => {
-        var promise = setCurrentId(idNum);
-    }
-
     return<div id="myDropdown" className="dropdown-content">
-        <SpeedInput setSpeed={setSpeed}/>
+        <SpeedInput setSpeed={setSpeed} handleChanges={handleChanges}/>
         <SearchBox setValue={setValue} setToggled={setToggled} setInputRef={setInputRef}/>
-        <SearchRender toggled={toggled} partsList={partsList} value={value} setCurrentId={handleSelection} setRefList={setRefList}/>
+        <SearchRender toggled={toggled} partsList={partsList} value={value} setRefList={setRefList} handleChanges={handleChanges}/>
     </div>
 }
 
