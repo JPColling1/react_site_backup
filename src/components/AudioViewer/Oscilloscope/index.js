@@ -43,7 +43,7 @@ export const Oscillosope = (props) => {
                     res => res.json()
                 ).then(
                     data => {
-                        {debugger}
+                        //{debugger}
                         setMinimum(JSON.parse(data["data"]))
                     }
                 )
