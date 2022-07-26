@@ -1,6 +1,5 @@
 import React from 'react';
 import { Markup } from 'interweave';
-import Company_Requests from '../../company_requests';
 
 var responseData;
 
@@ -22,8 +21,14 @@ export default class Table extends React.Component{
     }
 
     retrieve_data(){
-        let requests = new Company_Requests();
-        requests.get_Companies().then(value => this.set_data(value));
+        fetch("/getsCompanies").then(
+            res => res.json()
+        ).then(
+            data => {
+                var parsedData = JSON.parse(data["data"])
+                this.set_data(parsedData)
+            }
+        );
     }
 
     componentDidMount(){
