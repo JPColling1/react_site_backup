@@ -4,7 +4,6 @@ import React from 'react';
 import Table from '../components/Table/index';
 //import Input from '../components/Input/index';
 //import {useState} from 'react';
-import Company_Requests from '../company_requests';
 import './tools.css';
 
 //var dataTable = new Table();
@@ -27,28 +26,98 @@ export default class Tools extends React.Component {
 
   //make requests
   makeRequests(requestType){
-    let requests = new Company_Requests();
-
     if (requestType === "gets"){
-      requests.get_Companies();
+      fetch("/getsCompanies").then(
+        res => res.json()
+      ).then(
+          data => {
+              var parsedData = JSON.parse(data["data"])
+              console.log(parsedData)
+              this.dataTable.current.retrieve_data();
+          }
+      );
     }
     else if (requestType === "get"){
-      requests.get_Company(this.state.idNum);
+      fetch("/getCompany", 
+        { method: 'POST', 
+          body: JSON.stringify({"idNum": this.state.idNum}),
+          headers: new Headers({ 
+            'Content-Type': 'application/json',
+          })
+        }).then(
+          res => res.json()
+        ).then(
+            data => {
+                var parsedData = JSON.parse(data["data"])
+                console.log(parsedData)
+                this.dataTable.current.retrieve_data();
+            }
+        );
     }
     else if (requestType === "post"){
-      requests.post_Company(this.state.company_name);
+      fetch("/postCompany", {
+          method:"POST", 
+          body: JSON.stringify({"company_name": String(this.state.company_name)}),
+          headers: new Headers({ 
+            "Content-Type": "application/json",
+          })
+        }).then(
+          res => res.json()
+        ).then(
+            data => {
+                console.log(data["data"])
+                this.dataTable.current.retrieve_data();
+            }
+        );
     }
     else if (requestType === "patch"){
-      requests.patch_Company(this.state.idNum, this.state.company_name);
+      fetch("/patchCompany", 
+        { method: 'POST', 
+          body: JSON.stringify({"idNum": this.state.idNum, "company_name": this.state.company_name}),
+          headers: new Headers({ 
+            'Content-Type': 'application/json',
+          })
+        }).then(
+          res => res.json()
+        ).then(
+            data => {
+                console.log(data["data"])
+                this.dataTable.current.retrieve_data();
+            }
+        );
     }
     else if (requestType === "put"){
-      requests.put_Company(this.state.idNum, this.state.company_name);
+      fetch("/putCompany", 
+        { method: 'POST', 
+          body: JSON.stringify({"idNum": this.state.idNum, "company_name": this.state.company_name}),
+          headers: new Headers({ 
+            'Content-Type': 'application/json',
+          })
+        }).then(
+          res => res.json()
+        ).then(
+            data => {
+                console.log(data["data"])
+                this.dataTable.current.retrieve_data();
+            }
+        );
     }
     else if (requestType === "delete"){
-      requests.delete_Company(this.state.idNum);
+      fetch("/deleteCompany", 
+        { method: 'POST', 
+          body: JSON.stringify({"idNum": this.state.idNum}),
+          headers: new Headers({ 
+            'Content-Type': 'application/json',
+          })
+        }).then(
+          res => res.json()
+        ).then(
+            data => {
+                console.log(data["data"])
+                this.dataTable.current.retrieve_data();
+            }
+        );
     }
-
-    this.dataTable.current.retrieve_data();
   }
 
   render(){
