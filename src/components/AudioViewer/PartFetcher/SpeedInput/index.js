@@ -8,7 +8,6 @@ const postSpeedVal = (speed, handleChanges) => {
             headers: new Headers({ 
                 'Content-Type': 'application/json',
             }),
-            
         }).then(response  => {
             return response.json();
         }).then(data => {
